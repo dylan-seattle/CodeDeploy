@@ -1,19 +1,18 @@
-version: 0.0
-os: linux
-
 files:
-  - source: files/newpage.html
-    destination: /var/www/html
-
-permissions:
-  - object: /var/www/html
-    pattern: newpage.html
-    mode: 755
-    type:
-      - file
-
+- {destination: /var/www/html, source: files/index.html}
 hooks:
-  BeforeInstall:
-    - location: scripts/webserver-stop.sh
   AfterInstall:
-    - location: scripts/webserver-start.sh
+  - {location: scripts/sleep.sh}
+  - {location: scripts/webserver-start.sh}
+  BeforeInstall:
+  - {location: scripts/webserver-stop.sh}
+  - {location: scripts/delete-old-index.sh}
+os: linux
+permissions:
+- group: apache
+  mode: 644
+  object: /var/www/html
+  owner: apache
+  pattern: index.html
+  type: [file]
+version: 0.0
